@@ -31,55 +31,42 @@ public class BranchController {
          return ResponseEntity.ok().body(service.getDtoById(id));
     }
 
-    @GetMapping("/add")
-    public String showAddForm(Model model){
-        model.addAttribute("branch_dto", new BranchRequestDto());
-        return "add_form";
-    }
+    @Operation(summary = "Add new Branch")
     @PostMapping("/add")
-    public String add(@Valid @ModelAttribute("branch_dto") BranchRequestDto branchReqDto, BindingResult bindingResult, RedirectAttributes redirect, Model model){
-        BranchDto existingDto = service.getDtoByName(branchReqDto.getName());
-        if (existingDto != null){
-            bindingResult.reject("duplicate_entry", "Cannot use this name. '" + branchReqDto.getName() + "' already exists.");
-        }
-        if (bindingResult.hasErrors()) {
-            return "add_form";
-        }
-        service.addBranch(branchReqDto);
-        redirect.addFlashAttribute("added_success", "Branch added to the list.");
-        return "redirect:/api/v1/";
+    public ResponseEntity<BranchDto> add(@Valid @RequestBody BranchRequestDto branchReqDto){
+        return ResponseEntity.ok().body(service.addBranch(branchReqDto));
     }
 
-    @GetMapping("/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model){
-        BranchRequestDto branchRequestDto = service.getReq(id);
-        model.addAttribute("branchDto", branchRequestDto);
-        model.addAttribute("id", id);
-        return "update_form";
-    }
-    
-    @PostMapping("/update/{id}")
-    public String updateByName(@PathVariable("id") Integer id, @Valid @ModelAttribute("branchDto") BranchRequestDto branchReqDto, BindingResult bindingResult, RedirectAttributes redirect, Model model){
-        BranchDto existingDto = service.getDtoByName(branchReqDto.getName());
-        if (!service.existsBranchName(id, branchReqDto.getName())){
-            if (existingDto != null){
-                bindingResult.reject("duplicate_entry", "Cannot use this name. '" + branchReqDto.getName() + "' already exists.");
-            }
-        }
-        if (bindingResult.hasErrors()) {
-            return "update_form";
-        }
-        if (service.updateBranch(id, branchReqDto)){
-            redirect.addFlashAttribute("updated_success", "Branch updated.");
-        } else {
-            redirect.addFlashAttribute("no_updated", "No changes were made.");
-        }
-        return "redirect:/api/v1/";
-    }
-
-    @GetMapping("delete/{id}")
-    public String deleteById(@PathVariable("id") Integer id){
-        service.deleteBranch(id);
-        return "redirect:/api/v1/";
-    }
+//    @GetMapping("/update/{id}")
+//    public String showUpdateForm(@PathVariable("id") Integer id, Model model){
+//        BranchRequestDto branchRequestDto = service.getReq(id);
+//        model.addAttribute("branchDto", branchRequestDto);
+//        model.addAttribute("id", id);
+//        return "update_form";
+//    }
+//
+//    @PostMapping("/update/{id}")
+//    public String updateByName(@PathVariable("id") Integer id, @Valid @ModelAttribute("branchDto") BranchRequestDto branchReqDto, BindingResult bindingResult, RedirectAttributes redirect, Model model){
+//        BranchDto existingDto = service.getDtoByName(branchReqDto.getName());
+//        if (!service.existsBranchName(id, branchReqDto.getName())){
+//            if (existingDto != null){
+//                bindingResult.reject("duplicate_entry", "Cannot use this name. '" + branchReqDto.getName() + "' already exists.");
+//            }
+//        }
+//        if (bindingResult.hasErrors()) {
+//            return "update_form";
+//        }
+//        if (service.updateBranch(id, branchReqDto)){
+//            redirect.addFlashAttribute("updated_success", "Branch updated.");
+//        } else {
+//            redirect.addFlashAttribute("no_updated", "No changes were made.");
+//        }
+//        return "redirect:/api/v1/";
+//    }
+//
+//    @GetMapping("delete/{id}")
+//    public String deleteById(@PathVariable("id") Integer id){
+//        service.deleteBranch(id);
+//        return "redirect:/api/v1/";
+//    }
 }
