@@ -21,7 +21,7 @@ public class BranchController {
     private final BranchService service;
     @Operation(summary = "Get all branches")
     @GetMapping("/branches")
-    public ResponseEntity<List<BranchDto>> showHomePage(Model model){
+    public ResponseEntity<List<BranchDto>> getAllBranches(){
          return ResponseEntity.ok().body(service.getAllBranches());
     }
 
