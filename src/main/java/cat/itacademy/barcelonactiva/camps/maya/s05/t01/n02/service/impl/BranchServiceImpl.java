@@ -23,16 +23,8 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public Branch getBranchById(Integer id) {
-        return branchRepo.findById(id).orElse(null);
-    }
-
-    @Override
     public BranchDto getDtoById(Integer id) {
-        Branch branchExisting = getBranchById(id);
-        if (branchExisting == null){
-            throw new BranchNotFoundException("Branch not found with ID: " + id);
-        }
+        Branch branchExisting = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
         return toDto(branchExisting);
     }
 
@@ -45,11 +37,11 @@ public class BranchServiceImpl implements BranchService {
         return null;
     }
 
-    @Override
-    public BranchRequestDto getReq(Integer id){
-        Branch branch = getBranchById(id);
-        return new BranchRequestDto(branch.getName(), branch.getCountry());
-    }
+//    @Override
+//    public BranchRequestDto getReq(Integer id){
+//        Branch branch = getBranchById(id);
+//        return new BranchRequestDto(branch.getName(), branch.getCountry());
+//    }
 
     @Override
     public void addBranch(BranchRequestDto branchReqDto) {
@@ -58,28 +50,29 @@ public class BranchServiceImpl implements BranchService {
         branchRepo.save(branch);
     }
 
-    @Override
-    public boolean updateBranch(Integer id, BranchRequestDto branchReqDto) {
-        Branch existingBranch = getBranchById(id);
-        if (existingBranch.getName().equalsIgnoreCase(branchReqDto.getName()) &&
-        existingBranch.getCountry().equalsIgnoreCase(branchReqDto.getCountry())){
-            return false;
-        }
-        existingBranch.setName(branchReqDto.getName());
-        existingBranch.setCountry(branchReqDto.getCountry());
-        branchRepo.save(existingBranch);
-        return true;
-    }
+//    @Override
+//    public boolean updateBranch(Integer id, BranchRequestDto branchReqDto) {
+//        Branch existingBranch = getBranchById(id);
+//        if (existingBranch.getName().equalsIgnoreCase(branchReqDto.getName()) &&
+//        existingBranch.getCountry().equalsIgnoreCase(branchReqDto.getCountry())){
+//            return false;
+//        }
+//        existingBranch.setName(branchReqDto.getName());
+//        existingBranch.setCountry(branchReqDto.getCountry());
+//        branchRepo.save(existingBranch);
+//        return true;
+//    }
 
     @Override
     public void deleteBranch(Integer id) {
-        branchRepo.delete(getBranchById(id));
+        Branch branchExisting = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
+        branchRepo.deleteById(branchExisting.getId());
     }
 
-    @Override
-    public boolean existsBranchName(Integer id, String name) {
-        return getBranchById(id).getName().equalsIgnoreCase(name);
-    }
+//    @Override
+//    public boolean existsBranchName(Integer id, String name) {
+//        return getBranchById(id).getName().equalsIgnoreCase(name);
+//    }
 
     @Override
     public Branch toEntity(BranchRequestDto reqDto) {
