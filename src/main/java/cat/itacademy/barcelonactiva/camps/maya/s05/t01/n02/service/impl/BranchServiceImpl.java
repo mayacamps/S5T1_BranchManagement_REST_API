@@ -1,5 +1,6 @@
 package cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.service.impl;
 
+import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.exceptions.BranchNotFoundException;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.dto.BranchDto;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.dto.request.BranchRequestDto;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.entity.Branch;
@@ -28,12 +29,13 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public BranchDto getDtoById(Integer id) {
-        Branch branchExisting = branchRepo.findByName(getBranchById(id).getName()).orElse(null);
-        if (branchExisting!=null){
-            return toDto(branchExisting);
+        Branch branchExisting = getBranchById(id);
+        if (branchExisting == null){
+            throw new BranchNotFoundException("Branch not found with ID: " + id);
         }
-        return null;
+        return toDto(branchExisting);
     }
+
     @Override
     public BranchDto getDtoByName(String name) {
         Branch branchExisting = branchRepo.findByName(name).orElse(null);

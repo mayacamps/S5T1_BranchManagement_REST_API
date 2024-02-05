@@ -19,10 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BranchController {
     private final BranchService service;
-    @Operation(summary = "Get all branches")
+    @Operation(summary = "Get all Branches")
     @GetMapping("/branches")
     public ResponseEntity<List<BranchDto>> getAllBranches(){
          return ResponseEntity.ok().body(service.getAllBranches());
+    }
+
+    @Operation(summary = "Get Branch by ID")
+    @GetMapping("/getOne/{id}")
+    public ResponseEntity<BranchDto> getById(@PathVariable("id") Integer id){
+         return ResponseEntity.ok().body(service.getDtoById(id));
     }
 
     @GetMapping("/add")
@@ -42,13 +48,6 @@ public class BranchController {
         service.addBranch(branchReqDto);
         redirect.addFlashAttribute("added_success", "Branch added to the list.");
         return "redirect:/api/v1/";
-    }
-
-    @GetMapping("/getOne/{id}")
-    public String getById(@PathVariable("id") Integer id, Model model){
-        BranchDto existingDto = service.getDtoById(id);
-        model.addAttribute("branchDto", existingDto);
-        return "showOneDetail";
     }
 
     @GetMapping("/update/{id}")
