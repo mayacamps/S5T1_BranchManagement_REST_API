@@ -31,23 +31,10 @@ public class BranchController {
          return ResponseEntity.ok().body(service.getDtoById(id));
     }
 
-    @GetMapping("/add")
-    public String showAddForm(Model model){
-        model.addAttribute("branch_dto", new BranchRequestDto());
-        return "add_form";
-    }
+    @Operation(summary = "Add new Branch")
     @PostMapping("/add")
-    public String add(@Valid @ModelAttribute("branch_dto") BranchRequestDto branchReqDto, BindingResult bindingResult, RedirectAttributes redirect, Model model){
-        BranchDto existingDto = service.getDtoByName(branchReqDto.getName());
-        if (existingDto != null){
-            bindingResult.reject("duplicate_entry", "Cannot use this name. '" + branchReqDto.getName() + "' already exists.");
-        }
-        if (bindingResult.hasErrors()) {
-            return "add_form";
-        }
-        service.addBranch(branchReqDto);
-        redirect.addFlashAttribute("added_success", "Branch added to the list.");
-        return "redirect:/api/v1/";
+    public ResponseEntity<BranchDto> add(@Valid @RequestBody BranchRequestDto branchReqDto){
+        return ResponseEntity.ok().body(service.addBranch(branchReqDto));
     }
 
 //    @GetMapping("/update/{id}")

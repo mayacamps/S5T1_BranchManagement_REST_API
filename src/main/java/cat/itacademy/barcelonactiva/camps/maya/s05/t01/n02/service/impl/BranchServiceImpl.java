@@ -1,5 +1,6 @@
 package cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.service.impl;
 
+import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.exceptions.BranchAlreadyExistsException;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.exceptions.BranchNotFoundException;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.dto.BranchDto;
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.dto.request.BranchRequestDto;
@@ -23,18 +24,14 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchDto getDtoById(Integer id) {
-        Branch branchExisting = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
-        return toDto(branchExisting);
+    public Branch getBranchById(Integer id) {
+        return branchRepo.findById(id).orElse(null);
     }
 
     @Override
-    public BranchDto getDtoByName(String name) {
-        Branch branchExisting = branchRepo.findByName(name).orElse(null);
-        if (branchExisting!=null){
-            return toDto(branchExisting);
-        }
-        return null;
+    public BranchDto getDtoById(Integer id) {
+        Branch branchExisting = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
+        return toDto(branchExisting);
     }
 
 //    @Override
@@ -44,10 +41,13 @@ public class BranchServiceImpl implements BranchService {
 //    }
 
     @Override
-    public void addBranch(BranchRequestDto branchReqDto) {
+    public BranchDto addBranch(BranchRequestDto branchReqDto) {
+        branchRepo.findByName(branchReqDto.getName()).ifPresent(branch -> {
+            throw new BranchAlreadyExistsException("Branch already exists with name: " + branch.getName());
+        });
         Branch branch = toEntity(branchReqDto);
-        toDto(branch).setId(branch.getId());
         branchRepo.save(branch);
+        return toDto(branch);
     }
 
 //    @Override
