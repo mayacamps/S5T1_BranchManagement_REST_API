@@ -45,13 +45,14 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchDto updateBranch(Integer id, BranchRequestDto branchReqDto) {
         Branch existingBranch = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
-
+        if(!countries.contains(branchReqDto.getCountry())) throw new CountryDoesNotExistException("Introduce valid country. Country: '" + branchReqDto.getCountry() + "' does not exist.");
         if (!existingBranch.getName().equalsIgnoreCase(branchReqDto.getName())){
             branchRepo.findByName(branchReqDto.getName()).ifPresent(branch -> {
                 throw new BranchAlreadyExistsException("Branch already exists with name: " + branch.getName());
             });
             existingBranch.setName(branchReqDto.getName());
         }
+
         existingBranch.setCountry(branchReqDto.getCountry());
         branchRepo.save(existingBranch);
         return toDto(existingBranch);
