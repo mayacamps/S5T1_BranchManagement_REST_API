@@ -36,7 +36,7 @@ public class BranchServiceImpl implements BranchService {
         branchRepo.findByName(branchReqDto.getName()).ifPresent(branch -> {
             throw new BranchAlreadyExistsException("Branch already exists with name: " + branch.getName());
         });
-        if(!countries.contains(branchReqDto.getCountry())) throw new CountryDoesNotExistException("Introduce valid country. Country: '" + branchReqDto.getCountry() + "' does not exist.");
+        if(countries.stream().noneMatch(branchReqDto.getCountry()::equalsIgnoreCase)) throw new CountryDoesNotExistException("Introduce valid country. Country: '" + branchReqDto.getCountry() + "' does not exist.");
         Branch branch = toEntity(branchReqDto);
         branchRepo.save(branch);
         return toDto(branch);
@@ -45,7 +45,7 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchDto updateBranch(Integer id, BranchRequestDto branchReqDto) {
         Branch existingBranch = branchRepo.findById(id).orElseThrow(() -> new BranchNotFoundException("Branch not found with ID: " + id));
-        if(!countries.contains(branchReqDto.getCountry())) throw new CountryDoesNotExistException("Introduce valid country. Country: '" + branchReqDto.getCountry() + "' does not exist.");
+        if(countries.stream().noneMatch(branchReqDto.getCountry()::equalsIgnoreCase)) throw new CountryDoesNotExistException("Introduce valid country. Country: '" + branchReqDto.getCountry() + "' does not exist.");
         if (!existingBranch.getName().equalsIgnoreCase(branchReqDto.getName())){
             branchRepo.findByName(branchReqDto.getName()).ifPresent(branch -> {
                 throw new BranchAlreadyExistsException("Branch already exists with name: " + branch.getName());
