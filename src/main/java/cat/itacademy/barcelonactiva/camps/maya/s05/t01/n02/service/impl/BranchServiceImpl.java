@@ -49,10 +49,7 @@ public class BranchServiceImpl implements BranchService {
             });
             existingBranch.setName(branchReqDto.getName());
         }
-        if (!existingBranch.getCountry().equalsIgnoreCase(branchReqDto.getCountry())){
-            existingBranch.setCountry(branchReqDto.getCountry());
-        }
-
+        existingBranch.setCountry(branchReqDto.getCountry());
         branchRepo.save(existingBranch);
         return toDto(existingBranch);
     }
