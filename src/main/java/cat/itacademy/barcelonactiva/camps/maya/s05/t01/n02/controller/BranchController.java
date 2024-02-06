@@ -6,6 +6,7 @@ import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.service.BranchService
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,32 +38,10 @@ public class BranchController {
         return ResponseEntity.ok().body(service.addBranch(branchReqDto));
     }
 
-//    @GetMapping("/update/{id}")
-//    public String showUpdateForm(@PathVariable("id") Integer id, Model model){
-//        BranchRequestDto branchRequestDto = service.getReq(id);
-//        model.addAttribute("branchDto", branchRequestDto);
-//        model.addAttribute("id", id);
-//        return "update_form";
-//    }
-//
-//    @PostMapping("/update/{id}")
-//    public String updateByName(@PathVariable("id") Integer id, @Valid @ModelAttribute("branchDto") BranchRequestDto branchReqDto, BindingResult bindingResult, RedirectAttributes redirect, Model model){
-//        BranchDto existingDto = service.getDtoByName(branchReqDto.getName());
-//        if (!service.existsBranchName(id, branchReqDto.getName())){
-//            if (existingDto != null){
-//                bindingResult.reject("duplicate_entry", "Cannot use this name. '" + branchReqDto.getName() + "' already exists.");
-//            }
-//        }
-//        if (bindingResult.hasErrors()) {
-//            return "update_form";
-//        }
-//        if (service.updateBranch(id, branchReqDto)){
-//            redirect.addFlashAttribute("updated_success", "Branch updated.");
-//        } else {
-//            redirect.addFlashAttribute("no_updated", "No changes were made.");
-//        }
-//        return "redirect:/api/v1/";
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BranchDto> updateByName(@PathVariable(value = "id") Integer id, @Valid @RequestBody BranchRequestDto branchReqDto){
+        return ResponseEntity.ok().body(service.updateBranch(id, branchReqDto));
+    }
 
     @Operation(summary = "Delete Branch by ID")
     @DeleteMapping("/delete/{id}")
