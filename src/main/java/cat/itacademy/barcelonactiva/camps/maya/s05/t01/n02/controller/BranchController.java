@@ -5,7 +5,6 @@ import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.model.dto.request.Bra
 import cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.service.BranchService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
