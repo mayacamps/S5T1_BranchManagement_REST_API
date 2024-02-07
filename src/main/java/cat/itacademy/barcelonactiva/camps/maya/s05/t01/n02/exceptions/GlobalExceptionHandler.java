@@ -1,6 +1,5 @@
 package cat.itacademy.barcelonactiva.camps.maya.s05.t01.n02.exceptions;
 
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
