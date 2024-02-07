@@ -34,6 +34,7 @@ public class BranchController {
         return ResponseEntity.ok().body(service.addBranch(branchReqDto));
     }
 
+    @Operation(summary = "Update Branch by ID")
     @PutMapping("/update/{id}")
     public ResponseEntity<BranchDto> updateById(@PathVariable(value = "id") Integer id, @Valid @RequestBody BranchRequestDto branchReqDto){
         return ResponseEntity.ok().body(service.updateBranch(id, branchReqDto));
